@@ -18,10 +18,6 @@ export default function TrackerCard({
     createInitialState(editItem, category)
   );
 
-  if (editItem && editItem.id !== newTrack.id) {
-    setNewTrack(editItem);
-  }
-
   function createInitialState(item, categoryList) {
     if (item) {
       return item;
@@ -81,6 +77,23 @@ export default function TrackerCard({
     resetForm();
   };
 
+  const handleActiveChange = (newActive) => {
+    onTrackerActive(newActive);
+    setNewTrack((prevTrack) => ({
+      ...prevTrack,
+      category: category.length > 0 ? category[0] : "",
+    }));
+  };
+
+  if (editItem && editItem.id !== newTrack.id) {
+    setNewTrack(editItem);
+  } else if (category.length > 0 && !category.includes(newTrack.category)) {
+    setNewTrack((prevTrack) => ({
+      ...prevTrack,
+      category: category[0],
+    }));
+  }
+
   return (
     <div className="p-6 py-8 bg-[#F9FAFB] border rounded-md">
       <h2 className="text-3xl font-semibold leading-7 text-gray-800 text-center">
@@ -93,7 +106,7 @@ export default function TrackerCard({
             className={`cursor-pointer text-center flex-1 px-4 py-2 hover:bg-slate-50 hover:text-slate-900 ${
               active === "expense" ? "active" : ""
             }`}
-            onClick={() => onTrackerActive("expense")}
+            onClick={() => handleActiveChange("expense")}
           >
             Expense
           </div>
@@ -101,7 +114,7 @@ export default function TrackerCard({
             className={`cursor-pointer text-center flex-1 px-4 py-2 hover:bg-slate-50 hover:text-slate-900 ${
               active === "income" ? "active" : ""
             }`}
-            onClick={() => onTrackerActive("income")}
+            onClick={() => handleActiveChange("income")}
           >
             Income
           </div>
