@@ -3,7 +3,12 @@ import ExpenseIcon from "../../../assets/svg/expense/ExpenseIcon";
 import CategoryFilterDrawer from "../common/CategoryFilterDrawer";
 import SortDrawer from "../common/SortDrawer";
 
-export default function ExpenseHeader({ categoryList, onFilter, onSort }) {
+export default function ExpenseHeader({
+  categoryList,
+  filterCategory,
+  onFilter,
+  onSort,
+}) {
   return (
     <div className="flex items-center justify-between gap-2 bg-[#F9FAFB] py-4 px-4 rounded-md">
       <div className="flex items-center gap-2">
@@ -23,6 +28,7 @@ export default function ExpenseHeader({ categoryList, onFilter, onSort }) {
 
         <CategoryFilterDrawer
           categoryList={categoryList}
+          selectedCategories={filterCategory}
           onFilterClick={onFilter}
           filterFrom={"expense"}
         />

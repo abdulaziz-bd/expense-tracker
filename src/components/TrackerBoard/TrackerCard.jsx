@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Error from "./common/Error";
+import validateItem from "./common/validateItem";
 
 /* eslint-disable react/prop-types */
 export default function TrackerCard({
@@ -10,52 +12,77 @@ export default function TrackerCard({
   onUpdateTrack,
   onCancelEdit,
 }) {
-  const [newTrack, setNewTrack] = useState({
-    id: crypto.randomUUID(),
-    category: "",
-    amount: 0,
-    date: "",
-  });
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [newTrack, setNewTrack] = useState(
+    createInitialState(editItem, category)
+  );
 
-  useEffect(() => {
-    if (editItem) {
-      setNewTrack(editItem);
-    }
-  }, [editItem]);
+  if (editItem && editItem.id !== newTrack.id) {
+    setNewTrack(editItem);
+  }
 
-  useEffect(() => {
-    // Set initial category to the first option if available
-    if (category.length > 0 && newTrack.category === "") {
-      setNewTrack((prev) => ({ ...prev, category: category[0] }));
+  function createInitialState(item, categoryList) {
+    if (item) {
+      return item;
     }
-  }, [category]);
+    return {
+      id: crypto.randomUUID(),
+      category: categoryList.length > 0 ? categoryList[0] : "",
+      amount: 0,
+      date: "",
+    };
+  }
 
   const handleSaveNewTrack = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
+    if (isError) {
+      setIsError(false);
+      setErrorMessage("");
+    }
     setNewTrack((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(newTrack);
+    const { isValid, message } = validateItem(newTrack);
+    console.log(isValid, message);
+    if (!isValid) {
+      setIsError(true);
+      setErrorMessage(message);
+      return;
+    }
     onSaveTrack(newTrack);
+    resetForm();
+  };
+
+  const handleUpdateTrack = (e) => {
+    e.preventDefault();
+    console.log(newTrack);
+    const { isValid, message } = validateItem(newTrack);
+    console.log(isValid, message);
+    if (!isValid) {
+      setIsError(true);
+      setErrorMessage(message);
+      return;
+    }
+    onUpdateTrack(newTrack);
+    resetForm();
+  };
+
+  const resetForm = () => {
     setNewTrack({
       id: crypto.randomUUID(),
-      category: "",
+      category: category.length > 0 ? category[0] : "",
       amount: 0,
       date: "",
     });
   };
 
-  const handleUpdateTrack = (e) => {
-    e.preventDefault();
-    onUpdateTrack(newTrack);
-    setNewTrack({
-      id: crypto.randomUUID(),
-      category: "",
-      amount: 0,
-      date: "",
-    });
+  const handleCancel = () => {
+    onCancelEdit();
+    resetForm();
   };
 
   return (
@@ -150,7 +177,7 @@ export default function TrackerCard({
             />
           </div>
         </div>
-
+        {isError && <Error error={errorMessage} />}
         <div className="flex justify-between gap-2">
           <button
             type="submit"
@@ -162,15 +189,7 @@ export default function TrackerCard({
           {editItem && (
             <button
               className="mt-6 rounded-md bg-red-600 px-8 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 w-full"
-              onClick={() => {
-                onCancelEdit();
-                setNewTrack({
-                  id: crypto.randomUUID(),
-                  category: "",
-                  amount: 0,
-                  date: "",
-                });
-              }}
+              onClick={handleCancel}
             >
               Cancel
             </button>

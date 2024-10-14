@@ -15,6 +15,7 @@ export default function ExpenseCard({
     <div className="border rounded-md">
       <ExpenseHeader
         categoryList={category}
+        filterCategory={filterCategory}
         onFilter={onFilter}
         onSort={onSort}
       />

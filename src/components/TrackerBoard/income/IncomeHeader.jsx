@@ -3,7 +3,12 @@ import IncomeIcon from "../../../assets/svg/income/IncomeIcon";
 import CategoryFilterDrawer from "../common/CategoryFilterDrawer";
 import SortDrawer from "../common/SortDrawer";
 
-export default function IncomeHeader({ categoryList, onFilter, onSort }) {
+export default function IncomeHeader({
+  categoryList,
+  filterCategory,
+  onFilter,
+  onSort,
+}) {
   return (
     <div className="flex items-center justify-between gap-2 bg-[#F9FAFB] py-4 px-4 rounded-md">
       {/* icon */}
@@ -25,6 +30,7 @@ export default function IncomeHeader({ categoryList, onFilter, onSort }) {
 
         <CategoryFilterDrawer
           categoryList={categoryList}
+          selectedCategories={filterCategory}
           onFilterClick={onFilter}
           filterFrom={"income"}
         />

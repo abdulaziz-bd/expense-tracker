@@ -1,34 +1,47 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import SortIcon from "../../../assets/svg/common/SortIcon";
 
 // eslint-disable-next-line react/prop-types
 export default function SortDrawer({ onSortClick }) {
   const [isOpen, setIsOpen] = useState(false);
-  const drawerRef = useRef(null);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (drawerRef.current && !drawerRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
+  const handleClickOutside = useCallback((event) => {
+    const isOutsideClick =
+      !event.target.closest("#sort-dropdown") &&
+      !event.target.closest("button");
+    if (isOutsideClick) {
+      setIsOpen(false);
+      document.removeEventListener("click", handleClickOutside);
     }
+  }, []);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [drawerRef]);
+  const handleToggleDrawer = () => {
+    setIsOpen((prevIsOpen) => {
+      if (!prevIsOpen) {
+        setTimeout(() => {
+          document.addEventListener("click", handleClickOutside);
+        }, 0);
+      } else {
+        document.removeEventListener("click", handleClickOutside);
+      }
+      return !prevIsOpen;
+    });
+  };
+
+  const handleSortClick = (sortType) => {
+    onSortClick(sortType);
+    setIsOpen(false);
+    document.removeEventListener("click", handleClickOutside);
+  };
 
   return (
-    <div className="relative inline-block text-left" ref={drawerRef}>
+    <div className="relative inline-block text-left">
       <div>
         <button
           type="button"
           className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          id="menu-button"
-          aria-expanded="true"
-          aria-haspopup="true"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleToggleDrawer}
+          aria-expanded={isOpen}
         >
           <SortIcon />
         </button>
@@ -39,36 +52,27 @@ export default function SortDrawer({ onSortClick }) {
           className="absolute z-10 mt-2 left-5 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           role="menu"
           aria-orientation="vertical"
-          aria-labelledby="menu-button"
+          aria-labelledby="sort-button"
           tabIndex="-1"
+          id="sort-dropdown"
         >
           <div className="py-1" role="none">
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all"
+            <button
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all"
               role="menuitem"
               tabIndex="-1"
-              id="menu-item-0"
-              onClick={() => {
-                onSortClick("low");
-                setIsOpen(false);
-              }}
+              onClick={() => handleSortClick("low")}
             >
               Low to High
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all"
+            </button>
+            <button
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all"
               role="menuitem"
               tabIndex="-1"
-              id="menu-item-0"
-              onClick={() => {
-                onSortClick("high");
-                setIsOpen(false);
-              }}
+              onClick={() => handleSortClick("high")}
             >
               High to Low
-            </a>
+            </button>
           </div>
         </div>
       )}

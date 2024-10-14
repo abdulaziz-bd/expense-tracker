@@ -92,6 +92,7 @@ export default function TrackerBoard() {
         return expense;
       });
       setExpenses(newExpenses);
+      setEditItem(null);
     } else {
       const newIncomes = incomes.map((income) => {
         if (income.id === track.id) {
@@ -100,6 +101,7 @@ export default function TrackerBoard() {
         return income;
       });
       setIncomes(newIncomes);
+      setEditItem(null);
     }
   };
 

@@ -15,6 +15,7 @@ export default function IncomeCard({
     <div className="border rounded-md relative">
       <IncomeHeader
         categoryList={category}
+        filterCategory={filterCategory}
         onFilter={onFilter}
         onSort={onSort}
       />
