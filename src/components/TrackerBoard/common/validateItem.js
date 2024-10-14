@@ -1,5 +1,4 @@
 export default function ValidateItem(item) {
-  console.log(item);
   // Check if item is an object
   if (!item || typeof item !== "object") {
     return { isValid: false, message: "Item must be an object." };
@@ -24,6 +23,9 @@ export default function ValidateItem(item) {
   // Check amount
   if (item.amount === "" || item.amount === null || item.amount === 0) {
     return { isValid: false, message: "Amount cannot be empty or null." };
+  }
+  if (item.amount < 0) {
+    return { isValid: false, message: "Amount cannot be negative." };
   }
   const numAmount = Number(item.amount);
   if (isNaN(numAmount)) {

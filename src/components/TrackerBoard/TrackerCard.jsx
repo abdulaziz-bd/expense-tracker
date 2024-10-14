@@ -45,9 +45,7 @@ export default function TrackerCard({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(newTrack);
     const { isValid, message } = validateItem(newTrack);
-    console.log(isValid, message);
     if (!isValid) {
       setIsError(true);
       setErrorMessage(message);
@@ -59,9 +57,7 @@ export default function TrackerCard({
 
   const handleUpdateTrack = (e) => {
     e.preventDefault();
-    console.log(newTrack);
     const { isValid, message } = validateItem(newTrack);
-    console.log(isValid, message);
     if (!isValid) {
       setIsError(true);
       setErrorMessage(message);

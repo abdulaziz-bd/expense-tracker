@@ -5,27 +5,13 @@ import IncomeCard from "./income/IncomeCard";
 import TrackerCard from "./TrackerCard";
 
 export default function TrackerBoard() {
-  const [incomes, setIncomes] = useState([
-    {
-      id: crypto.randomUUID(),
-      amount: 10000,
-      date: "2023-01-01",
-      category: "Salary",
-    },
-  ]);
+  const [incomes, setIncomes] = useState([]);
 
-  const [expenses, setExpenses] = useState([
-    {
-      id: crypto.randomUUID(),
-      amount: 5000,
-      date: "2023-01-02",
-      category: "Education",
-    },
-  ]);
+  const [expenses, setExpenses] = useState([]);
 
   const [incomeCategories, setIncomeCategories] = useState([
-    "Salary",
     "Outsourcing",
+    "Salary",
     "Bond",
     "Dividend",
   ]);
